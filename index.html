@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remuneração, Benefícios e FGTS - SENAI Paraná</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f766e;     /* Teal Escuro */
+            --primary-light: #ccfbf1;/* Menta Claro */
+            --accent: #e29578;       /* Laranja de Destaque */
+            --bg-dark: #0f172a;      /* Slate Escuro */
+            --bg-light: #f0fdfa;     /* Fundo de Slide Suave */
+            --text-main: #1e293b;    /* Texto Escuro */
+            --text-muted: #475569;   /* Texto Suave */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 20vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Moldura Protetora de Projeção (16:9) */
+        .viewport {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .slide-frame {
+            width: 1800px;
+            height: 600px;
+            background-color: var(--bg-light);
+            border-radius: 16px;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Detalhes Decorativos de Fundo (Sem Imagens Externas) */
+        .slide-frame::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: -5%;
+            width: 340px;
+            height: 340px;
+            background: radial-gradient(circle, rgba(204,251,241,0.6) 0%, rgba(240,253,250,0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .slide-frame::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            z-index: 2;
+        }
+
+        /* Controle de Estado dos Slides */
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 40px 50px;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1;
+        }
+
+        .slide.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Elementos Textuais Gerais */
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary);
+            font-weight: 400;
+        }
+
+        .slide-title {
+            font-size: 30px;
+            border-left: 6px solid var(--primary);
+            padding-left: 12px;
+            line-height: 1.2;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slide-title i {
+            color: var(--accent);
+            font-size: 20px;
+        }
+
+        p, li {
+            font-size: 20px;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        /* Layouts de Cartões Técnicos */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(15, 118, 110, 0.15);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-accent {
+            border-top: 5px solid var(--accent);
+        }
+
+        .card-primary {
+            border-top: 5px solid var(--primary);
+        }
+
+        .card h3 {
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+        }
+
+        .card-accent h3 {
+            color: #c2410c;
+        }
+
+        /* Destaques Técnicos e Exemplos Práticos */
+        .exemplo-box {
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-top: auto;
+        }
+
+        .exemplo-box h4 {
+            font-size: 23px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-teal { background: #ccfbf1; color: #0f766e; }
+        .badge-orange { background: #ffedd5; color: #c2410c; }
+        .badge-slate { background: #f1f5f9; color: #475569; }
+
+        /* Estilo da Capa */
+        .capa-layout {
+            text-align: center;
+            justify-content: center !important;
+            gap: 30px;
+        }
+
+        .capa-layout h1 {
+            font-size: 56px;
+            line-height: 1.1;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .capa-layout .divider {
+            width: 120px;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            margin: 0 auto;
+            border-radius: 3px;
+        }
+
+        .capa-layout .subtitle {
+            font-size: 20px;
+            color: var(--text-muted);
+            font-weight: 500;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Estilo de Transição/Sessão */
+        .transition-layout {
+            background: linear-gradient(135deg, var(--primary) 0%, #115e59 100%);
+            color: white !important;
+            justify-content: center !important;
+            align-items: center;
+            text-align: center;
+            padding: 80px;
+        }
+
+        .transition-layout h2 {
+            color: #ccfbf1;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .transition-layout p {
+            color: #e2fbf5;
+            font-size: 20px;
+            max-width: 600px;
+            font-weight: 200;
+        }
+
+        /* Caso Prático Específico (Dividido em duas colunas: Pergunta e Resposta) */
+        .case-grid {
+            display: grid;
+            grid-template-columns: 4fr 5fr;
+            gap: 25px;
+            height: 100%;
+        }
+
+        .pergunta-card {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-left: 6px solid #fbbf24;
+            padding: 24px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .pergunta-card h3 {
+            color: #b45309;
+        }
+
+        .resposta-card {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-left: 6px solid #22c55e;
+            padding: 24px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .resposta-card h3 {
+            color: #15803d;
+        }
+
+        /* Controles Inferiores */
+        .control-bar {
+            background-color: #1e293b;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #334155;
+            color: white;
+            font-size: 13px;
+        }
+
+        .nav-btn {
+            background-color: #334155;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--primary);
+        }
+
+        .slide-counter {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .slide-counter span {
+            color: var(--accent);
+        }
+
+        /* Elemento de Rodapé Fixo de Cada Slide */
+        .slide-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(15, 118, 110, 0.1);
+            padding-top: 15px;
+            margin-top: auto;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Estilo da Simulação de Gráfico de Barras no FGTS */
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .bar-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .bar-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar-track {
+            background: #e2e8f0;
+            height: 28px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+        }
+
+        .bar-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            transition: width 0.8s ease-in-out;
+        }
+
+        /* Dinâmica de Aula Invertida - Fluxograma */
+        .flow-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+
+        .flow-step {
+            background: white;
+            border: 1px solid rgba(15, 118, 110, 0.15);
+            border-radius: 10px;
+            padding: 16px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .flow-step::after {
+            content: '\f061';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 700;
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 16px;
+            z-index: 5;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-number {
+            background: var(--primary-light);
+            color: var(--primary);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Viewport da Apresentação -->
+    <div class="viewport">
+        <div class="slide-frame" id="presentation">
+
+            <!-- SLIDE 1: CAPA -->
+            <div class="slide active capa-layout" data-index="1">
+                <span class="badge badge-teal" style="width: fit-content; margin: 0 auto;">Curso Técnico Industrial</span>
+                <h1>Remuneração, Benefícios<br>e FGTS</h1>
+                <div class="divider"></div>
+                <p class="subtitle">Análise Técnica, Desafios de Auditoria de Folha e os Direitos Sociais do Trabalhador Industrial</p>
+                <p style="font-size: 24px; font-weight: 600; color: var(--primary); margin-top: 20px;">
+                    SENAI Paraná • Sistema Fiep
+                </p>
+                <div class="slide-footer" style= "font-size: 16px; border-top: none;">
+                    <span>Apresentado por: Gabriel Marcelo, Lucas Belarmino, Maxwell Mariano</span>
+                    <span>Metodologia: Sala de Aula Invertida</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 2: SALÁRIO VS PISO -->
+            <div class="slide" data-index="2">
+                <h2 class="slide-title"><i class="fa-solid fa-scale-balanced"></i> Salário-Base vs. Piso Salarial</h2>
+                <div class="grid-2">
+                    <div class="card card-primary">
+                        <h3><i class="fa-solid fa-file-contract"></i> Salário-Base Contratual</h3>
+                        <p>É a contraprestação direta nominal estipulada expressamente na Carteira de Trabalho (CTPS) pelo período regulamentar em que o trabalhador fica à disposição da empresa.</p>
+                        <p><strong>Matriz de Cálculo:</strong> Serve como a base aritmética de onde derivam todas as verbas reflexas, como o cálculo do 13º salário, terço constitucional de férias, repouso semanal remunerado (RSR) e adicionais.</p>
+                    </div>
+                    <div class="card card-accent">
+                        <h3><i class="fa-solid fa-gavel"></i> Piso Salarial da Categoria</h3>
+                        <p>Patamar remuneratório mínimo que os profissionais de uma categoria (como metalúrgicos ou técnicos) podem receber na sua respectiva base territorial.</p>
+                        <p><strong>Força da Convenção Coletiva (CCT):</strong> Negociado diretamente entre sindicato de trabalhadores e patronal, o piso possui força jurídica superior ao salário mínimo nacional na área correspondente.</p>
+                    </div>
+                </div>
+                <div class="exemplo-box">
+                    <h4><i class="fa-solid fa-industry"></i> Exemplo Técnico na Indústria</h4>
+                    <p style="font-size: 13.5px;">Um jovem se forma no SENAI e é contratado como Técnico em Eletrotécnica. Embora o Salário Mínimo Nacional vigente seja R$ 1.512,00, a Convenção Coletiva (CCT) local estipula um piso de <strong>R$ 3.400,00</strong>. A indústria é legalmente obrigada a registrá-lo com o valor do piso, evitando passivos de diferenças salariais.</p>
+                </div>
+                <div class="slide-footer">
+                    <span>Apresentador 1 - Parte A</span>
+                    <span>Fundamentação: Art. 444 e Art. 611-A da CLT</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: SALÁRIO-FAMÍLIA -->
+            <div class="slide" data-index="3">
+                <h2 class="slide-title"><i class="fa-solid fa-hands-holding-child"></i> Proteção Social à Família: O Salário-Família</h2>
+                <div class="grid-2">
+                    <div class="card card-primary">
+                        <h3><i class="fa-solid fa-heart-pulse"></i> Natureza Previdenciária e Assistencial</h3>
+                        <p>Verba de redistribuição de renda e auxílio no custeio das despesas de dependentes de trabalhadores de baixa renda. <strong>Não visa remunerar a contraprestação de trabalho.</strong></p>
+                        <p><strong>Isenções Tributárias:</strong> Por possuir caráter assistencial e não contraprestativo, sobre esse valor <strong>não há incidência</strong> de descontos compulsórios de INSS ou Imposto de Renda (IRRF).</p>
+                    </div>
+                    <div class="card card-accent">
+                        <h3><i class="fa-solid fa-folder-open"></i> Regras e Obrigações de RH</h3>
+                        <p>Pago mensalmente por cota de dependente (filho menor de 14 anos ou inválido de qualquer idade) para trabalhadores que recebem até o teto regulamentar de baixa renda (<strong>R$ 1.980,38</strong>).</p>
+                        <p><strong>Documentação Obrigatória:</strong> O empregado deve fornecer ao RH a Certidão de Nascimento, Carteira de Vacinação atualizada (filhos até 6 anos) e comprovante periódico de frequência escolar (7 a 14 anos).</p>
+                    </div>
+                </div>
+                <div class="exemplo-box">
+                    <h4><i class="fa-solid fa-wallet"></i> Aplicação Prática</h4>
+                    <p style="font-size: 13.5px;">Um mecânico industrial recebe R$ 1.800,00 mensais e tem dois filhos pequenos (2 e 5 anos). Ao apresentar a documentação, ele passa a receber em dinheiro limpo <strong>duas cotas mensais de R$ 67,54</strong> somadas no holerite, cujo custo final é deduzido pela empresa nas guias devidas ao INSS.</p>
+                </div>
+                <div class="slide-footer">
+                    <span>Apresentador 1 - Parte B</span>
+                    <span>Regulação: Lei nº 4.266/63 e Portarias do Ministério da Previdência</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 4: LICENÇAS E ESTABILIDADE -->
+            <div class="slide" data-index="4">
+                <h2 class="slide-title"><i class="fa-solid fa-baby-carriage"></i> Garantias de Paternidade, Maternidade e Primeira Infância</h2>
+                <div class="grid-2">
+                    <div class="card card-primary">
+                        <h3><i class="fa-solid fa-person-breastfeeding"></i> Salário-Maternidade e Estabilidade</h3>
+                        <p>Garantia constitucional baseada no princípio da proteção integral à maternidade (Artigo 7º da CF). Garante o afastamento remunerado de <strong>120 dias</strong> com manutenção do salário.</p>
+                        <p><strong>Estabilidade Provisória:</strong> Proteção rígida à gestante contra dispensa sem justa causa, ativa desde a confirmação médica da gravidez até <strong>5 meses após o parto</strong>.</p>
+                    </div>
+                    <div class="card card-accent">
+                        <h3><i class="fa-solid fa-person-shelter"></i> Licença-Paternidade e Custeio</h3>
+                        <p>Garante ao pai o afastamento de <strong>5 dias consecutivos</strong> contados do primeiro dia útil após o nascimento, para prestar suporte emocional e físico imediato à mãe e ao bebê.</p>
+                        <p><strong>Empresa Cidadã:</strong> Programa do Governo Federal que amplia os prazos contratuais para <strong>180 dias</strong> (maternidade) e <strong>20 dias</strong> (paternidade), mediante incentivos fiscais para a indústria.</p>
+                    </div>
+                </div>
+                <div class="exemplo-box">
+                    <h4><i class="fa-solid fa-circle-nodes"></i> Dinâmica Tributária de Reembolso</h4>
+                    <p style="font-size: 13.5px;">Uma operadora de produção recebe R$ 2.500,00 e afasta-se por maternidade. A empresa continua pagando seu salário integral, mas realiza a <strong>compensação tributária correspondente de forma direta</strong>, deduzindo o valor total nas guias de recolhimento previdenciário subsequentes.</p>
+                </div>
+                <div class="slide-footer">
+                    <span>Apresentador 2 - Parte A</span>
+                    <span>Fundamentação: Art. 10, II, "b" do ADCT e Art. 391-A da CLT</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 5: FUNCIONAMENTO DO FGTS -->
+            <div class="slide" data-index="5">
+                <h2 class="slide-title"><i class="fa-solid fa-piggy-bank"></i> Poupança Compulsória e Proteção Financeira: O FGTS</h2>
+                <div class="grid-2">
+                    <div class="card card-primary">
+                        <h3><i class="fa-solid fa-coins"></i> Alíquota de 8% e a Base de Incidência</h3>
+                        <p>Instituído historicamente para substituir a antiga estabilidade decenal da CLT, o FGTS é uma conta individualizada em nome do empregado na Caixa Econômica Federal.</p>
+                        <p><strong>Incidência Ampla:</strong> A alíquota obrigatória de <strong>8%</strong> incide não apenas sobre o salário-base nominal, mas também sobre horas extras, adicionais (insalubridade, periculosidade, noturno) e 13º salário.</p>
+                    </div>
+                    <div class="card card-accent">
+                        <h3><i class="fa-solid fa-shield-halved"></i> Regra de Ouro: Encargo Exclusivo</h3>
+                        <p>O FGTS é um <strong>encargo patronal exclusivo</strong>. É expressamente proibido descontar qualquer parcela desta obrigação do salário líquido ou dos proventos contratuais do trabalhador.</p>
+                        <p><strong>Direito Indisponível:</strong> Sendo de ordem pública e social, o empregado não pode abrir mão dos depósitos nem realizar acordos de isenção patronal por fora do sistema legal sob pena de nulidade absoluta.</p>
+                    </div>
+                </div>
+                <div class="exemplo-box">
+                    <h4><i class="fa-solid fa-house-chimney"></i> Exemplo de Acúmulo Patrimonial</h4>
+                    <p style="font-size: 13px;">Um soldador industrial trabalha há 5 anos na metalúrgica com remuneração média de R$ 3.000,00. Os depósitos patronais mensais acumulados geram um saldo histórico em torno de <strong>R$ 15.000,00 corrigidos</strong>. Ele pode sacar esse saldo para dar de entrada no financiamento de sua casa própria.</p>
+                </div>
+                <div class="slide-footer">
+                    <span>Apresentador 2 - Parte B</span>
+                    <span>Legislação: Artigo 15 da Lei Federal nº 8.036/90</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 6: FGTS NA RESCISÃO -->
+            <div class="slide" data-index="6">
+                <h2 class="slide-title"><i class="fa-solid fa-file-signature"></i> Condições de Rescisão Contratual e Multa do FGTS</h2>
+                <div class="grid-2">
+                    <div class="card card-primary" style="justify-content: space-between;">
+                        <div>
+                            <h3><i class="fa-solid fa-triangle-exclamation"></i> Proteção contra a Dispensa Involuntária</h3>
+                            <p class="text-xs" style="margin-bottom: 8px;">Na demissão sem justa causa, o trabalhador resgata a integralidade dos valores de sua conta de FGTS, acrescida da <strong>multa rescisória de 40%</strong>.</p>
+                            <p class="text-xs"><strong>Cálculo Real:</strong> A multa de 40% incide sobre o total acumulado que o empregador depositou durante o contrato, inclusive valores já sacados anteriormente pelo funcionário.</p>
+                        </div>
+                        <div class="bar-chart">
+                            <div class="bar-item">
+                                <div class="bar-label"><span>Saque-Rescisão (Opção Padrão)</span><span>100% + 40% Multa</span></div>
+                                <div class="bar-track"><div class="bar-fill" style="width: 100%; background: var(--primary);">Saldo Total + Multa</div></div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label"><span>Saque-Aniversário</span><span>Apenas 40% Multa</span></div>
+                                <div class="bar-track"><div class="bar-fill" style="width: 40%; background: var(--accent);">Fundo Bloqueado (Saca só Multa)</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-accent">
+                        <h3><i class="fa-solid fa-list-check"></i> Outros Fatos Geradores de Saque</h3>
+                        <p>O saldo retido nas contas da Caixa Econômica Federal também pode ser movimentado legalmente em outras hipóteses graves de vulnerabilidade social ou pessoal do trabalhador:</p>
+                        <ul style="padding-left: 15px; display: flex; flex-direction: column; gap: 4px; font-size: 13.5px;">
+                            <li>• Aposentadoria oficial pelo INSS;</li>
+                            <li>• Doenças graves (Neoplasia maligna, HIV ou estágio terminal);</li>
+                            <li>• Calamidade pública oficialmente declarada por decreto governamental;</li>
+                            <li>• Falecimento do titular (liberação aos dependentes legais).</li>
+                        </ul>
+                        <div class="exemplo-box" style="margin-top: 5px;">
+                            <p style="font-size: 12.5px;">Se o soldador do exemplo anterior for demitido sem justa causa, ele resgata seus <strong>R$ 15.000,00</strong> mais a multa de 40% (<strong>R$ 6.000,00</strong>) paga pela empresa, totalizando R$ 21.000,00.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <span>Apresentador 3 - Parte A</span>
+                    <span>Fundamentação: Art. 18 da Lei nº 8.036/90 e Lei nº 13.932/19</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 7: CONCLUSÃO TEÓRICA -->
+            <div class="slide" data-index="7">
+                <h2 class="slide-title"><i class="fa-solid fa-lightbulb"></i> Conclusão: Pontos Fundamentais e Síntese Prática</h2>
+                <div class="grid-2">
+                    <div class="card card-primary">
+                        <h3><i class="fa-solid fa-shield-halved"></i> Garantia de Equilíbrio Jurídico</h3>
+                        <p>O conhecimento rigoroso da CLT e das Convenções Coletivas de Trabalho (CCTs) protege os formandos do SENAI de possíveis abusos operacionais nas rotinas administrativas.</p>
+                        <p><strong>Proteção de Ativo:</strong> Paralelamente, capacita os gestores a planejarem a folha de pagamento com segurança legal, evitando que as indústrias incorram em multas, fiscalizações e pesados **passivos trabalhistas judiciais**.</p>
+                    </div>
+                    <div class="card card-accent">
+                        <h3><i class="fa-solid fa-award"></i> Valorização e Desenvolvimento Social</h3>
+                        <p>O respeito irrestrito aos benefícios sociais fundamentais (como salário-família e licenças) atua diretamente como fator de dignidade, estabilidade financeira e segurança para as famílias.</p>
+                        <p><strong>FGTS como Patrimônio do Trabalhador:</strong> Funciona na prática tanto como um colchão financeiro de desemprego quanto como uma ferramenta de fomento imobiliário e habitacional.</p>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <span>Síntese Teórica</span>
+                    <span>SENAI Paraná • Gestão de Recursos Humanos</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 8: CASO PRÁTICO 1 -->
+            <div class="slide" data-index="8">
+                <h2 class="slide-title"><i class="fa-solid fa-circle-question"></i> Caso Técnico 1: FGTS e Horas Extras</h2>
+                <div class="case-grid">
+                    <div class="pergunta-card">
+                        <div class="badge-container">
+                            <span class="badge badge-orange">Caso Real de Chão de Fábrica</span>
+                        </div>
+                        <h3>A Afirmação do Operador</h3>
+                        <p style="font-size: 24.5px; line-height: 1.6; font-style: italic;">
+                            "Durante o horário de almoço na fábrica, um operador de CNC afirma: 'Fazer horas extras este mês é desvantajoso, pois o aumento dos Proventos vai inflar o desconto compulsório do meu FGTS e reduzir meu salário líquido'."
+                        </p>
+                        <div class="exemplo-box" style="background-color: #fffdec; border-left-color: #fbbf24;">
+                            <h4 style="color: #b45309;">Análise de Auditoria:</h4>
+                            <p style="font-size: 23px; color: #78350f;">Onde reside o erro técnico da afirmação do trabalhador?</p>
+                        </div>
+                    </div>
+                    <div class="resposta-card">
+                        <div class="badge-container">
+                            <span class="badge badge-teal">Parecer Técnico Trabalhista</span>
+                        </div>
+                        <h3>Resposta Técnico-Esperada</h3>
+                        <p style="font-size: 23.5px; line-height: 1.5;">
+                            As horas extras possuem evidente <strong>natureza remuneratória</strong> e integram a base de cálculo de incidência do FGTS. Contudo, o erro está em chamar o depósito de 'desconto'.
+                        </p>
+                        <p style="font-size: 23.5px; line-height: 1.5;">
+                            O FGTS é um <strong>encargo patronal exclusivo do empregador</strong> (conforme o Art. 15 da Lei nº 8.036/90). Não há desconto em folha do trabalhador.
+                        </p>
+                        <p style="font-size: 23.5px; line-height: 1.5; font-weight: 600;">
+                            Conclusão: Realizar horas extras aumenta a remuneração líquida recebida pelo operário e eleva o depósito patronal de sua conta vinculada.
+                        </p>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <span>Estudo de Caso 1</span>
+                    <span>Fundamentação: Art. 15 da Lei nº 8.036/90</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 9: CASO PRÁTICO 2 -->
+            <div class="slide" data-index="9">
+                <h2 class="slide-title"><i class="fa-solid fa-circle-question"></i> Caso Técnico 2: Flexibilização de Piso</h2>
+                <div class="case-grid">
+                    <div class="pergunta-card">
+                        <div class="badge-container">
+                            <span class="badge badge-orange">Caso Real de Admissão</span>
+                        </div>
+                        <h3>A Proposta de Recursos Humanos</h3>
+                        <p style="font-size: 24.5px; line-height: 1.6; font-style: italic;">
+                            "Um técnico em mecânica aprovado em processo seletivo ouve do RH no ato da contratação: 'Como você não tem experiência prática, fixaremos seu Salário-Base em R$ 2.000,00 nos 90 dias de experiência. Depois, subimos para o Piso da Convenção Coletiva (CCT) de R$ 3.400,00'."
+                        </p>
+                        <div class="exemplo-box" style="background-color: #fffdec; border-left-color: #fbbf24;">
+                            <h4 style="color: #b45309;">Análise de Auditoria:</h4>
+                            <p style="font-size: 23px; color: #78350f;">Essa manobra contratual é juridicamente válida?</p>
+                        </div>
+                    </div>
+                    <div class="resposta-card">
+                        <div class="badge-container">
+                            <span class="badge badge-teal">Parecer Técnico Trabalhista</span>
+                        </div>
+                        <h3>Resposta Técnico-Esperada</h3>
+                        <p style="font-size: 23.5px; line-height: 1.5;">
+                            <strong>A manobra é ilegal e nula.</strong> O Piso Salarial estipulado em Convenção Coletiva de Trabalho (CCT) possui força normativa e eficácia geral automática para todos na base territorial, independente da experiência.
+                        </p>
+                        <p style="font-size: 23.5px; line-height: 1.5;">
+                            Os direitos garantidos por instrumentos de negociação coletiva são <strong>irrenunciáveis</strong> por ato unilateral do trabalhador ou acordo direto.
+                        </p>
+                        <p style="font-size: 23.5px; line-height: 1.5; font-weight: 600;">
+                            Conclusão: O contrato nasce com nulidade de pleno direito (Art. 9º da CLT), gerando passivos trabalhistas retroativos com todas as diferenças salariais.
+                        </p>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <span>Estudo de Caso 2</span>
+                    <span>Fundamentação: Artigo 9º da CLT e Força Normativa da CCT</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 10: CASO PRÁTICO 3 -->
+            <div class="slide" data-index="10">
+                <h2 class="slide-title"><i class="fa-solid fa-circle-question"></i> Caso Técnico 3: Isonomia e Salário-Família</h2>
+                <div class="case-grid">
+                    <div class="pergunta-card">
+                        <div class="badge-container">
+                            <span class="badge badge-orange">Caso Real de Isonomia</span>
+                        </div>
+                        <h3>A Reclamação Interna</h3>
+                        <p style="font-size: 24.5px; line-height: 1.6; font-style: italic;">
+                            "Dois assistentes de logística desempenham as mesmas funções. Um percebe que a Remuneração Bruta do colega é maior devido ao recebimento do Salário-Família. O prejudicado exige isonomia salarial por 'trabalho igual, salário igual' (Art. 461 da CLT)."
+                        </p>
+                        <div class="exemplo-box" style="background-color: #fffdec; border-left-color: #fbbf24;">
+                            <h4 style="color: #b45309;">Análise de Auditoria:</h4>
+                            <p style="font-size: 13px; color: #78350f;">A tese de isonomia salarial fundamentada é sustentável?</p>
+                        </div>
+                    </div>
+                    <div class="resposta-card">
+                        <div class="badge-container">
+                            <span class="badge badge-teal">Parecer Técnico Trabalhista</span>
+                        </div>
+                        <h3>Resposta Técnico-Esperada</h3>
+                        <p style="font-size: 23.5px; line-height: 1.5;">
+                            <strong>Não, a tese é insustentável.</strong> O Salário-Família tem natureza puramente assistencial e previdenciária de redistribuição estatal, não se confundindo com pagamento pelo labor.
+                        </p>
+                        <p style="font-size: 23.5px; line-height: 1.5;">
+                            Não há violação ao princípio da isonomia ou equiparação do Artigo 461 da CLT, pois o benefício depende de fatos geradores individuais (dependentes válidos e teto de renda).
+                        </p>
+                        <p style="font-size: 23.5px; line-height: 1.5; font-weight: 600;">
+                            Conclusão: Por não integrar a base salarial contraprestativa funcional, o recebimento individualizado não gera direito de extensão a colegas.
+                        </p>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <span>Estudo de Caso 3</span>
+                    <span>Fundamentação: Artigo 461 da CLT</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 11: DINÂMICA DA AULA INVERTIDA -->
+            <div class="slide" data-index="11">
+                <h2 class="slide-title"><i class="fa-solid fa-users-gear"></i> Dinâmica Prática: O Tribunal de Auditoria</h2>
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <div class="flow-number">1</div>
+                        <h4 style="font-size: 24px;">Estudo Prévio</h4>
+                        <p style="font-size: 22px; color: var(--text-muted);">Visualização do vídeo do TST sobre 'Como ler seu holerite (Proventos vs. Descontos)' e análise de infográfico.</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-number">2</div>
+                        <h4 style="font-size: 24px;">Bancadas Técnicas</h4>
+                        <p style="font-size: 22px; color: var(--text-muted);">Divisão da sala em três bancadas: Trabalhadores (Acusação), Empregadores (Defesa) e Auditores (Juízes).</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-number">3</div>
+                        <h4 style="font-size: 24px;">Análise do Holerite</h4>
+                        <p style="font-size: 22px; color: var(--text-muted);">Identificar e fundamentar três inconsistências graves de folha apresentadas em um contracheque de exemplo.</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-number">4</div>
+                        <h4 style="font-size: 24px;">Veredito Final</h4>
+                        <p style="font-size: 22px; color: var(--text-muted);">Os juízes emitem a correção financeira total, fundamentam os termos na CLT e estipulam a multa de reparação.</p>
+                    </div>
+                </div>
+                <div class="exemplo-box" style="margin-top: 15px;">
+                    <h4><i class="fa-solid fa-triangle-exclamation"></i> O Desafio do Holerite Errado</h4>
+                    <p style="font-size: 13.5px; line-height: 1.4;">Os alunos analisarão em grupo um contracheque real simulado contendo: salário R$ 300,00 abaixo do piso fixado pela Convenção Coletiva (CCT), ausência de pagamento das cotas de salário-família de seus dois dependentes e desconto indevido de 8% listado de forma ilícita sob a rubrica "Desconto de FGTS".</p>
+                </div>
+                <div class="slide-footer">
+                    <span>Metodologia Ativa</span>
+                    <span>SENAI Paraná • Aula Invertida</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 12: ENCERRAMENTO -->
+            <div class="slide capa-layout" data-index="12">
+                <span class="badge badge-teal" style="width: fit-content; margin: 0 auto;">Fórum de Perguntas e Discussões</span>
+                <h1 style="font-size: 60px;">Perguntas e Debates</h1>
+                <div class="divider"></div>
+                <p class="subtitle" style="font-size: 18px;">Espaço aberto para resolução de dúvidas práticas da turma e considerações finais.</p>
+                <p style="font-size: 44px; font-weight: 700; color: var(--primary); margin-top: 40px;">Agradecemos a atenção de todos!</p>
+                <div class="slide-footer" style="border-top: none;">
+                    <span>SENAI Paraná • Curso Técnico Industrial</span>
+                    <span>Sistema Fiep © 2026</span>
+                </div>
+            </div>
+
+            <!-- BARRA DE NAVEGAÇÃO E CONTROLE -->
+            <div class="control-bar">
+                <button class="nav-btn" onclick="mudarSlide(-1)"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+                <div class="slide-counter">SLIDE <span id="current-page">1</span> DE <span id="total-pages">12</span></div>
+                <button class="nav-btn" onclick="mudarSlide(1)">Próximo <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let slideAtual = 1;
+        const totalSlides = 12;
+
+        document.getElementById('total-pages').textContent = totalSlides;
+
+        function mudarSlide(direcao) {
+            const novoslide = slideAtual + direcao;
+            if (novoslide >= 1 && novoslide <= totalSlides) {
+                // Remove classe active do slide anterior
+                document.querySelector(`.slide[data-index="${slideAtual}"]`).classList.remove('active');
+                // Adiciona classe active no novo slide
+                document.querySelector(`.slide[data-index="${novoslide}"]`).classList.add('active');
+                slideAtual = novoslide;
+                document.getElementById('current-page').textContent = slideAtual;
+            }
+        }
+
+        // Navegação por teclado para maior dinâmica na apresentação
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === 'Space') {
+                mudarSlide(1);
+            } else if (event.key === 'ArrowLeft') {
+                mudarSlide(-1);
+            }
+        });
+    </script>
+</body>
+</html>
